@@ -14,10 +14,32 @@ public class RailMoveController : MonoBehaviour
 
     private Tween tween;
 
-    private void Start()
+    private GameManager gameManager;
+
+    /// <summary>
+    /// RailMoveControllerの初期設定
+    /// </summary>
+    /// <param name="gameManager"></param>
+    public void SetUpRailMoveController(GameManager gameManager)
     {
+        this.gameManager = gameManager;
+        //TODO 他にもある場合には追記。必要に応じて引数を通じて外部から情報をもらうようにする
+    }
+
+    public void SetNextRailPathData(RailPathData nextRailPathData)
+    {
+        //目的地取得
+        currentRailPathData = nextRailPathData;
+        //移動開始
         StartCoroutine(StartRailMove());
     }
+
+
+
+    //private void Start()
+    //{
+      //  StartCoroutine(StartRailMove());
+    //}
 
     /// <summary>
     /// レール移動の開始
@@ -76,8 +98,10 @@ public class RailMoveController : MonoBehaviour
         //移動先のパスがまだ残っているか確認
         if(waypointIndex < currentRailPathData.GetPathTrans().Length)
         {
-            //TODO ミッションが発生するかゲームマネージャー側で確認
-            ResumeMove();
+            //ミッションが発生するかゲームマネージャー側で確認
+            gameManager.CheckMissionTrigger(waypointIndex++);
+            //ResumeMove();
+
         }
         else
         {
