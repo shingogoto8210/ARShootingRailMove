@@ -99,7 +99,7 @@ public class RailMoveController : MonoBehaviour
         if(waypointIndex < currentRailPathData.GetPathTrans().Length)
         {
             //ミッションが発生するかゲームマネージャー側で確認
-            gameManager.CheckMissionTrigger(waypointIndex++);
+            gameManager.CheckMissionTrigger(waypointIndex);
             //ResumeMove();
 
         }
