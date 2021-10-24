@@ -84,8 +84,14 @@ public class RayController : MonoBehaviour
 
             //if(hitEffect != null)
             //{
-                //hitEffectObj.SetActive(false);
+            //hitEffectObj.SetActive(false);
             //}
+
+            isShooting = false;
+        }
+        else
+        {
+            yield return null;
         }
     }
 
@@ -99,8 +105,7 @@ public class RayController : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 3.0f);
 
         RaycastHit hit;
-
-        if(Physics.Raycast(ray,out hit, playerController.shootRange, LayerMask.GetMask(layerMasksStr)))
+        if (Physics.Raycast(ray,out hit, playerController.shootRange, LayerMask.GetMask(layerMasksStr)))
         {
             Debug.Log(hit.collider.gameObject.name);
 
