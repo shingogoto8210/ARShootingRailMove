@@ -46,7 +46,7 @@ public class DataBaseManager : MonoBehaviour
     //}
 
     /// <summary>
-    /// プロパティのGetヲ使ってステージ内のルートの数の取得
+    /// プロパティのGetを使ってステージ内のルートの数の取得
     /// </summary>
     public int StagePathDataCount
     {

@@ -16,6 +16,8 @@ public class RailMoveController : MonoBehaviour
 
     private GameManager gameManager;
 
+    private int moveCount;
+
     /// <summary>
     /// RailMoveControllerの初期設定
     /// </summary>
@@ -66,6 +68,17 @@ public class RailMoveController : MonoBehaviour
         Debug.Log(totalTime);
 
         tween = railMoveTarget.DOPath(paths, totalTime).SetEase(Ease.Linear).OnWaypointChange((waypointIndex) => CheckArrivalDestination(waypointIndex));
+
+        //移動を一時停止
+        PauseMove();
+
+        //ゲームの進行状態が移動中になるまで待機
+        yield return new WaitUntil(() => gameManager.currentGameState == GameState.Play_Move);
+
+        //移動開始
+        ResumeMove();
+
+        Debug.Log("移動開始");
     }
 
     /// <summary>
@@ -101,13 +114,29 @@ public class RailMoveController : MonoBehaviour
             //ミッションが発生するかゲームマネージャー側で確認
             gameManager.CheckMissionTrigger(waypointIndex);
             //ResumeMove();
-
         }
         else
         {
             tween.Kill();
-            //TODO 移動先が残っていない場合には，ゲームマネージャー側で分岐の確認（次のルートの選定，移動先の分岐，ボス，クリアのいずれか）
+
+            //経路情報を殻にする
+            tween = null;
+
+            //移動先が残っていない場合には，ゲームマネージャー側で分岐の確認(次のルート選定，移動先の分岐，ボス，クリアのいずれか）
+            moveCount++;
+
+            gameManager.PreparateCheckNextBranch(moveCount);
+
             Debug.Log("分岐の確認");
         }
+    }
+
+    /// <summary>
+    /// 移動用の処理が登録されたか確認
+    /// </summary>
+    /// <returns></returns>
+    public bool GetMoveSetting()
+    {
+        return tween != null ? true : false;
     }
 }

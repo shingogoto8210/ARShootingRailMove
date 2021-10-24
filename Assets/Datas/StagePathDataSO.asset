@@ -12,4 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be122750e43113d4298122ac3e88f8a0, type: 3}
   m_Name: StagePathDataSO
   m_EditorClassIdentifier: 
-  stagePathDatasList: []
+  stagePathDatasList:
+  - branchDatasList:
+    - branchDirectionType: 0
+      railPathData: {fileID: 7715903410504021472, guid: ccd3734c71fdd4849b9ee555bc58bfef,
+        type: 3}
+  - branchDatasList:
+    - branchDirectionType: 1
+      railPathData: {fileID: 7715903410504021472, guid: ccd3734c71fdd4849b9ee555bc58bfef,
+        type: 3}
+    - branchDirectionType: 2
+      railPathData: {fileID: 7715903410504021472, guid: ccd3734c71fdd4849b9ee555bc58bfef,
+        type: 3}
