@@ -25,6 +25,10 @@ public class RayController : MonoBehaviour
     [SerializeField]
     private PlayerController playerController;
 
+    private EventBase eventBase;
+
+    private GameObject hitEffectObj;
+
     private void Start()
     {
         //Layerの情報を文字列に変換し，Raycastメソッドで利用しやすい情報を変数として作成しておく
@@ -116,20 +120,46 @@ public class RayController : MonoBehaviour
 
                 Debug.Log(target.name);
 
-                //TODO TryGetComponentの処理で敵や障害物などの情報を取得しつつ，判定をする
+                //TryGetComponentの処理で敵や障害物などの情報を取得しつつ，判定をする
+                //ゲームオブジェクトにアタッチされている親クラスを取得できるか判定
+                if(target.TryGetComponent(out eventBase))
+                {
 
-                //TODO 演出
+                    //取得した親クラスにある抽象メソッドを実行する　＝＞　子クラスで実装しているメソッドの振る舞いになる
+                    eventBase.TriggerEvent(playerController.bulletPower,BodyRegionType.Not_Available);
 
-                //同じ対象の場合
+                    //演出
+                    PlayHitEffect(hit.point, hit.normal);
+                }
+
+            //同じ対象の場合
             }
-            else
+            else if(target == hit.collider.gameObject)
             {
-                //TODO すでに情報があるので再取得はせずに判定飲みする
-                //TODO 演出
+                //すでに情報があるので再取得はせずに判定飲みする
+                eventBase.TriggerEvent(playerController.bulletPower, BodyRegionType.Not_Available);
+
+                //演出
+                PlayHitEffect(hit.point, hit.normal);
             }
         }
 
         //弾数を減らす
         playerController.CalcBulletCount(-1);
+    }
+
+    private void PlayHitEffect(Vector3 effectPos,Vector3 surfacePos)
+    {
+        if(hitEffectObj == null)
+        {
+            hitEffectObj = Instantiate(EffectManager.instance.hitEffectPrefab, effectPos, Quaternion.identity);
+        }
+        else
+        {
+            hitEffectObj.transform.position = effectPos;
+            hitEffectObj.transform.rotation = Quaternion.FromToRotation(Vector3.forward, surfacePos);
+
+            hitEffectObj.SetActive(true);
+        }
     }
 }
