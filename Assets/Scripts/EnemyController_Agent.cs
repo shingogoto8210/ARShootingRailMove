@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class EnemyController_Agent : EnemyBase
 {
+    [SerializeField]
     protected NavMeshAgent agent;  //NavMeshAgentコンポーネントの代入用。子クラスには変数の宣言も自由にできる。この情報はprotectedなので親クラスでも利用可能
 
     private float originMoveSpeed; //初期の移動速度の保持用。この情報はprivate修飾子なので，このクラスでしか使えない。
@@ -24,6 +25,7 @@ public class EnemyController_Agent : EnemyBase
 
             //利用している場合には目標地点をセット
             agent.destination = lookTarget.transform.position;
+            Debug.Log("目的地点を：" + lookTarget + "にセット");
 
             //移動速度をNavMeshに設定
             agent.speed = moveSpeed;
@@ -32,6 +34,8 @@ public class EnemyController_Agent : EnemyBase
             if (anim)
             {
                 anim.SetBool("Walk", true);
+                Debug.Log("歩き始める");
+
             }
         }
     }
@@ -44,6 +48,8 @@ public class EnemyController_Agent : EnemyBase
         if(lookTarget != null && agent != null)
         {
             agent.destination = lookTarget.transform.position;
+            //Debug.Log("目的地点を更新");
+
         }
     }
 

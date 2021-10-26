@@ -81,7 +81,6 @@ public class EnemyBase : EventBase
         {
             Vector3 direction = lookTarget.transform.position - transform.position;
             direction.y = 0;
-
             Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 0.1f);
         }
@@ -117,7 +116,7 @@ public class EnemyBase : EventBase
         }
         else
         {
-            if(other.transform.parent.TryGetComponent(out player))
+            if(other.transform.TryGetComponent(out player))
             {
 
                 //攻撃用のメソッドを登録
@@ -155,15 +154,16 @@ public class EnemyBase : EventBase
     {
         isAttack = true;
 
-        player.CalcHp(-attackPower);
 
         if (anim)
         {
             anim.SetTrigger("Attack");
         }
+        //Triggerがtrueになってから実際動き出すまでの時間差
+        yield return new WaitForSeconds(2.0f);
+        player.CalcHp(-attackPower);
 
         yield return new WaitForSeconds(attackInterval);
-
         isAttack = false;
     }
 

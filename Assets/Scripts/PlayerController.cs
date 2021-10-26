@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     public void SetUpPlayer()
     {
         //maxHpの設定があるか確認。なければ初期値10でセットしてhpを設定
-        hp = maxHp = maxHp == 0 ? 10 : maxBullet;
+        hp = maxHp = maxHp == 0 ? 10 : maxHp;
 
         //maxBulletの設定があるか確認。なければ初期値10でセットして弾数を設定
         BulletCount = maxBullet = maxBullet == 0 ? 10 : maxBullet;

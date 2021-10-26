@@ -33,7 +33,7 @@ public class RailMoveController : MonoBehaviour
         //目的地取得
         currentRailPathData = nextRailPathData;
         //移動開始
-        StartCoroutine(StartRailMove());
+        //StartCoroutine(StartRailMove());
     }
 
 

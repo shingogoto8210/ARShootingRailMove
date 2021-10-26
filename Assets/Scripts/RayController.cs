@@ -106,7 +106,7 @@ public class RayController : MonoBehaviour
     {
         //カメラの位置からRayを投射
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red, 3.0f);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red, 10.0f);
 
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit, playerController.shootRange, LayerMask.GetMask(layerMasksStr)))
@@ -128,19 +128,19 @@ public class RayController : MonoBehaviour
                     //取得した親クラスにある抽象メソッドを実行する　＝＞　子クラスで実装しているメソッドの振る舞いになる
                     eventBase.TriggerEvent(playerController.bulletPower,BodyRegionType.Not_Available);
 
-                    //演出
-                    PlayHitEffect(hit.point, hit.normal);
+                    //TODO 演出
+                    //PlayHitEffect(hit.point, hit.normal);
                 }
-
-            //同じ対象の場合
             }
-            else if(target == hit.collider.gameObject)
+            //同じ対象の場合
+            else if (target == hit.collider.gameObject)
             {
+                Debug.Log("target取得済み");
                 //すでに情報があるので再取得はせずに判定飲みする
                 eventBase.TriggerEvent(playerController.bulletPower, BodyRegionType.Not_Available);
 
-                //演出
-                PlayHitEffect(hit.point, hit.normal);
+                //TODO 演出
+                //PlayHitEffect(hit.point, hit.normal);
             }
         }
 
