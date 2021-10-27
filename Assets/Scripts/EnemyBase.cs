@@ -40,7 +40,10 @@ public class EnemyBase : EventBase
 
     public EnemyMoveType enemyMoveType;
 
-    //TODO 部位のListを持たせる
+    //部位のListを持たせる
+    [SerializeField, Header("部位の情報を登録するリスト")]
+    protected List<BodyRegionPartsController> partsControllersList = new List<BodyRegionPartsController>();
+
     //TODO 敵のデータのクラスを持たせる
 
     protected virtual void Start()
@@ -116,6 +119,8 @@ public class EnemyBase : EventBase
         }
         else
         {
+            //プレイヤーGameObjectを作成し，そこにPlayerControllerをアタッチしたため変更。元々はカメラについていた。
+            //if(other.transform.parent.TryGetComponent(out player))
             if(other.transform.TryGetComponent(out player))
             {
 
@@ -215,7 +220,15 @@ public class EnemyBase : EventBase
 
             //TODO エネミーの情報を外部クラスのListで管理している場合には，Listから削除
 
-            //TODO 部位による判定があり，かつ，頭を撃って倒した場合
+            //部位による判定があり，かつ，頭を撃って倒した場合
+            if(hitParts == BodyRegionType.Head)
+            {
+                BodyRegionPartsController parts = partsControllersList.Find(x => x.GetBodyType() == hitParts);
+                parts.gameObject.SetActive(false);
+
+                //スコアにボーナス
+                point *= 3;
+            }
 
             //TODO スコア加算
 

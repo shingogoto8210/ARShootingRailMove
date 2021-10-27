@@ -126,7 +126,9 @@ public class RayController : MonoBehaviour
                 {
 
                     //取得した親クラスにある抽象メソッドを実行する　＝＞　子クラスで実装しているメソッドの振る舞いになる
-                    eventBase.TriggerEvent(playerController.bulletPower,BodyRegionType.Not_Available);
+                    //eventBase.TriggerEvent(playerController.bulletPower,BodyRegionType.Not_Available);
+
+                    CalcDamage();
 
                     //TODO 演出
                     //PlayHitEffect(hit.point, hit.normal);
@@ -137,7 +139,9 @@ public class RayController : MonoBehaviour
             {
                 Debug.Log("target取得済み");
                 //すでに情報があるので再取得はせずに判定飲みする
-                eventBase.TriggerEvent(playerController.bulletPower, BodyRegionType.Not_Available);
+                //eventBase.TriggerEvent(playerController.bulletPower, BodyRegionType.Not_Available);
+
+                CalcDamage();
 
                 //TODO 演出
                 //PlayHitEffect(hit.point, hit.normal);
@@ -161,5 +165,23 @@ public class RayController : MonoBehaviour
 
             hitEffectObj.SetActive(true);
         }
+    }
+
+    private void CalcDamage()
+    {
+        (int lastDamage, BodyRegionType hitRegionType) partsValue;
+
+        //部位によるダメージを計算
+        if (target.TryGetComponent(out BodyRegionPartsController parts))
+        {
+            partsValue = parts.CalcDamageParts(playerController.bulletPower);
+        }
+        else
+        {
+            partsValue = (playerController.bulletPower, BodyRegionType.Not_Available);
+        }
+
+        //部位とダメージ決定
+        eventBase.TriggerEvent(partsValue.lastDamage, partsValue.hitRegionType);
     }
 }
