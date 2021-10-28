@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UniRx;
+using UniRx.Triggers;
+using System;
+
 /// <summary>
 /// Rayによる弾の発射処理の制御クラス
 /// </summary>
@@ -10,7 +14,7 @@ public class RayController : MonoBehaviour
     [Header("発射口用のエフェクトのサイズ調整")]
     public Vector3 muzzleFlashScale;
 
-    private bool isShooting;
+    //private bool isShooting;
 
     private GameObject muzzleFlashObj;  //生成したエフェクトの代入用
 
@@ -37,6 +41,18 @@ public class RayController : MonoBehaviour
         {
             layerMasksStr[i] = LayerMask.LayerToName(layerMasks[i]);
         }
+
+        this.UpdateAsObservable()
+            .TakeUntilDestroy(this)
+            .Where(_ => playerController.BulletCount > 0 && !playerController.isReloading && Input.GetMouseButton(0))
+            .ThrottleFirst(TimeSpan.FromSeconds(playerController.shootInterval))
+            .Subscribe(_ => { StartCoroutine(ShootTimer()); });
+
+        this.UpdateAsObservable()
+            .TakeUntilDestroy(this)
+            .Where(_ => playerController.BulletCount == 0 && playerController.isReloadModeOn && Input.GetMouseButtonDown(0))
+            .Subscribe(_ => { StartCoroutine(playerController.ReloadBullet()); });
+
     }
 
     private void Update()
@@ -44,16 +60,16 @@ public class RayController : MonoBehaviour
         //TODO ゲーム状態がプレイ中でない場合には処理を行わない制御をする
 
         //リロード判定（弾数0でリロード機能ありの場合）
-        if(playerController.BulletCount == 0 && playerController.isReloadModeOn && Input.GetMouseButtonDown(0))
-        {
-            StartCoroutine(playerController.ReloadBullet());
-        }
+        //if(playerController.BulletCount == 0 && playerController.isReloadModeOn && Input.GetMouseButtonDown(0))
+        //{
+          //  StartCoroutine(playerController.ReloadBullet());
+        //}
 
         //発射判定（弾数が残っており，リロード実行中でない場合）押しっぱなしで発射できる
-        if(playerController.BulletCount > 0 && !playerController.isReloading && Input.GetMouseButton(0))
-        {
-            StartCoroutine(ShootTimer());
-        }
+        //if(playerController.BulletCount > 0 && !playerController.isReloading && Input.GetMouseButton(0))
+        //{
+          //  StartCoroutine(ShootTimer());
+        //}
     }
 
     /// <summary>
@@ -62,9 +78,9 @@ public class RayController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShootTimer()
     {
-        if (!isShooting)
-        {
-            isShooting = true;
+        //if (!isShooting)
+        //{
+          //  isShooting = true;
 
             //発射エフェクトの表示。初回のみ生成し，２回目はオンオフで切り替える
             if(muzzleFlashObj == null)
@@ -91,12 +107,12 @@ public class RayController : MonoBehaviour
             //hitEffectObj.SetActive(false);
             //}
 
-            isShooting = false;
-        }
-        else
-        {
-            yield return null;
-        }
+           // isShooting = false;
+       // }
+        //else
+        //{
+          //  yield return null;
+        //}
     }
 
     /// <summary>
@@ -106,7 +122,7 @@ public class RayController : MonoBehaviour
     {
         //カメラの位置からRayを投射
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red, 10.0f);
+        Debug.DrawRay(ray.origin, ray.direction * 10, Color.red, 3.0f);
 
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit, playerController.shootRange, LayerMask.GetMask(layerMasksStr)))
@@ -122,7 +138,7 @@ public class RayController : MonoBehaviour
 
                 //TryGetComponentの処理で敵や障害物などの情報を取得しつつ，判定をする
                 //ゲームオブジェクトにアタッチされている親クラスを取得できるか判定
-                if(target.TryGetComponent(out eventBase))
+                if(target.transform.parent.TryGetComponent(out eventBase))
                 {
 
                     //取得した親クラスにある抽象メソッドを実行する　＝＞　子クラスで実装しているメソッドの振る舞いになる
@@ -175,6 +191,7 @@ public class RayController : MonoBehaviour
         if (target.TryGetComponent(out BodyRegionPartsController parts))
         {
             partsValue = parts.CalcDamageParts(playerController.bulletPower);
+            Debug.Log(parts.GetBodyType());
         }
         else
         {

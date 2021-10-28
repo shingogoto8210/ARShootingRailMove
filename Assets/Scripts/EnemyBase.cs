@@ -105,7 +105,7 @@ public class EnemyBase : EventBase
             //登録したメソッドを実行
             StartCoroutine(attackCoroutine);
 
-            Debug.Log("攻撃開始");
+            //Debug.Log("攻撃開始");
         }
 
         //プレイヤーの情報を保持しており，攻撃中でないなら
@@ -113,7 +113,7 @@ public class EnemyBase : EventBase
         {
             SetAttackCoroutine();
 
-            Debug.Log("プレイヤー　感知済");
+            //Debug.Log("プレイヤー　感知済");
 
             //プレイヤーの情報がないなら
         }
@@ -127,7 +127,7 @@ public class EnemyBase : EventBase
                 //攻撃用のメソッドを登録
                 SetAttackCoroutine();
 
-                Debug.Log("攻撃範囲内にプレイヤー　初感知");
+                //Debug.Log("攻撃範囲内にプレイヤー　初感知");
             }
         }
     }
@@ -146,7 +146,7 @@ public class EnemyBase : EventBase
             isAttack = false;
             StopCoroutine(attackCoroutine);
 
-            Debug.Log("攻撃範囲外");
+            //Debug.Log("攻撃範囲外");
         }
     }
 
