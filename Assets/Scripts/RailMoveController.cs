@@ -32,8 +32,10 @@ public class RailMoveController : MonoBehaviour
     {
         //目的地取得
         currentRailPathData = nextRailPathData;
+        Debug.Log("目的地取得");
         //移動開始
-        //StartCoroutine(StartRailMove());
+        StartCoroutine(StartRailMove());
+        Debug.Log("移動開始");
     }
 
 
@@ -124,6 +126,8 @@ public class RailMoveController : MonoBehaviour
 
             //移動先が残っていない場合には，ゲームマネージャー側で分岐の確認(次のルート選定，移動先の分岐，ボス，クリアのいずれか）
             moveCount++;
+            Debug.Log(moveCount);
+            
 
             gameManager.PreparateCheckNextBranch(moveCount);
 

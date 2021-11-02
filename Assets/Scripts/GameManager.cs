@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour
     [Header("現在のゲームの進行状況")]
     public GameState currentGameState;
 
+    [SerializeField]
+    private UIManager uiManager;
+
+    public BranchDirectionType nextBranchDirectionType;
+
+    public bool isSelect;
+
     private void Start()
     {
         //ゲームの状態を準備中にする
@@ -94,13 +101,22 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //TODO 分岐がある場合，UIに分岐を表示し，選択を待つ
+            
+
+            //分岐がある場合，UIに分岐を表示し，選択を待つ
+            uiManager.UpdateBranchDisplay();
 
             Debug.Log("ルートの分岐発生");
 
-            //TODO 分岐を選択するまで待機
+            //分岐を選択するまで待機
+            railMoveController.PauseMove();
+            yield return new WaitUntil(() => isSelect);
+            railMoveController.ResumeMove();
 
-            //TODO 選択したルートを次のルートに設定
+            
+            //選択したルートを次のルートに設定
+            originRailPathData = DataBaseManager.instance.GetRailPathDatasFromBranchNo(nextStagePathDataNo, nextBranchDirectionType);
+
             
         }
 
